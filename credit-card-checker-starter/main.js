@@ -22,13 +22,125 @@ const mystery5 = [4, 9, 1, 3, 5, 4, 0, 4, 6, 3, 0, 7, 2, 5, 2, 3]
 // An array of all the arrays above
 const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, invalid3, invalid4, invalid5, mystery1, mystery2, mystery3, mystery4, mystery5]
 
-
-// Add your functions below:
-
-//gisavio
+const teste = [4, 5, 5, 6, 7, 3, 7, 5, 8, 6, 8, 9, 9, 8, 5, 5];
 
 
+//Validate
+console.log('teste savio');
+const validateCred = (creditnumber) => {
+    let dig_sum = 0;
+    let last_digit = 0;
+    let count = 0;
+    for (let i = creditnumber.length -1 ; i >= 0; i--) {
+        if (i === creditnumber.length -1){
+            last_digit = creditnumber[i];  
+        } else {  
+            count++   
+            if (count % 2 === 0 ){
+                dig_sum += creditnumber[i];
+            } else{
+                dig_double = creditnumber[i] * 2;
+                if (dig_double >= 9){
+                    dig_sum += (dig_double - 9) ;
+                } else {
+                    dig_sum += dig_double;
+                }
+            }
+        }
+    }
+    if (
+        ((dig_sum % 10) === last_digit ) || 
+        ((dig_sum + last_digit) % 10 === 0 )
+        ) {
+        return true;
+    } else {
+        return false;
+    }
+    
+}
 
 
+const findInvalidCards = (cards) =>{
+  let invalidcards = [];
+  cards.forEach(card => {
+     if (!validateCred(card)) {
+        invalidcards.push(card);
+     }     
+  });
+  return invalidcards;
+}
 
+const idInvalidCardCompanies = (invalidCards) => {
+    let invalidComp = [];
+   
+    invalidCards.forEach(card => {
+    let exists = false;
+      switch (card[0]) {
+        case 3: //amex
+            invalidComp.forEach(company => {
+                if (!(company.indexOf('AMEX') === -1)) {
+                company[1].push(card);
+                exists = true;
+                }
+            });  
+            if (!exists){
+                invalidComp.push(['AMEX', [card]]) 
+            };
+            break;
+        case 4: //visa
+
+            invalidComp.forEach(company => {
+                if (!(company.indexOf('VISA') === -1)) {
+                company[1].push(card);
+                exists = true;
+                }
+            });  
+            if (!exists){
+                invalidComp.push(['VISA', [card]]) 
+            };
+            break;
+            
+        case 5: //martercard
+            invalidComp.forEach(company => {
+                if (!(company.indexOf('MASTERCARD') === -1)) {
+                company[1].push(card);
+                exists = true;
+                }
+            });  
+            if (!exists){
+                invalidComp.push(['MASTERCARD', [card]]) 
+            };
+            break;          
+            
+
+        case 6: //discovery
+            invalidComp.forEach(company => {
+                if (!(company.indexOf('DISCOVERY') === -1)) {
+                company[1].push(card);
+                exists = true;
+                }
+            });  
+            if (!exists){
+                invalidComp.push(['DISCOVERY', [card]]) 
+            };
+            break;
+
+          default:
+              break;
+      } 
+    })
+    return invalidComp;
+}
+
+//invalidcards:
+// ['VISA', [[CARD1],[CARD2],[CARD3] ]]
+
+const invalidComp = idInvalidCardCompanies(findInvalidCards(batch));
+
+
+console.log(`Invalid cards:`)
+console.log(findInvalidCards(batch));
+
+console.log(`Invalid cards by companies:`)
+console.log(invalidComp);
 
