@@ -18,12 +18,45 @@ const $weatherDiv = $("#weather1");
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 // Add AJAX functions here:
-const getVenues = () => {
+const getVenues = async () => {
+  const city = $input.val();
+  const actualDate = (new Date(Date.now()-(new Date()).getTimezoneOffset() * 60000)).toISOString().slice(0, 10).replace(/[^0-9]/g, "");
+  const urlToFetch = url + 
+                     city + 
+                     '&limit=10' +
+                     '&client_id=' + clientId + 
+                     '&client_secret=' + clientSecret +
+                     '&v=' + actualDate;
+                  
 
+  try {
+    const response = await fetch(urlToFetch);
+    if (response.ok) {
+      const jsonResponse = await response.json();
+      const venues = jsonResponse.response.groups[0].items.map(item => item.venue);
+      return venues;
+    }
+  } catch (error) {
+    console.log('Erro na seleção');
+    console.log(error);
+  }                     
+                     
 }
 
-const getForecast = () => {
-
+const getForecast = async () => {
+  const urlToFetch = weatherUrl + 
+                    '?&q=' +  $input.val() + 
+                    '&APPID=' + openWeatherKey;
+  console.log(urlToFetch);
+  try {
+   const response = await fetch(urlToFetch);
+   if (response.ok){
+    const jsonResponse = response.json();
+    return jsonResponse;
+   }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 
